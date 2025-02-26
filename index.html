@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bagikan Lokasi</title>
+    <script>
+        function sendLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    let latitude = position.coords.latitude;
+                    let longitude = position.coords.longitude;
+
+                    // Kirim data ke server Flask lokal
+                    fetch('http://localhost:5000/send-location', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ latitude: latitude, longitude: longitude })
+})
+.then(response => response.json())
+.then(data => alert(data.message))
+.catch(error => alert("Gagal mengirim lokasi!"));
+
+                }, function(error) {
+                    alert('Gagal mendapatkan lokasi.');
+                });
+            } else {
+                alert('Geolocation tidak didukung di browser ini.');
+            }
+        }
+    </script>
+</head>
+<body>
+    <h2>Klik tombol di bawah untuk membagikan lokasi</h2>
+    <button onclick="sendLocation()">Bagikan Lokasi</button>
+</body>
+</html>
